@@ -109,9 +109,13 @@ tell application "System Events" to key code 123 using control down
 Use key code `124` for Control-Right Arrow. This preserves the remote shortcut
 without passing through BetterTouchTool's keyboard-shortcut sender. The
 machine-specific recovery script in
-`scripts/configure-btt-remote-space-force-clicks.applescript` applies this to
-two existing triggers; its trigger UUIDs must be changed for another BTT
-installation.
+`scripts/configure-btt-remote-space-force-clicks.applescript` recreates the two
+corner triggers; its trigger UUIDs must be changed for another BTT installation.
+It deliberately uses BTT's `add_new_trigger` path because changing
+`BTTActionsToExecute` with `update_trigger` can appear to work but lose the
+attached actions after BTT is relaunched.
+The script then cleanly relaunches BTT to flush and immediately verify the
+durable configuration path; expect BTT to disappear briefly while it runs.
 
 ## Use
 
