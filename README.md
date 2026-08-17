@@ -91,7 +91,7 @@ On first use, macOS may ask whether Screen Sharing Dictation may control
 BetterTouchTool. Allow that request. BetterTouchTool also needs its normal
 Accessibility permission to issue the final paste shortcut.
 
-### Optional: Force Click to switch Spaces on the remote Mac
+### Optional: corner clicks to switch Spaces on the remote Mac
 
 Apple Screen Sharing forwards Control-Left Arrow and Control-Right Arrow to
 the remote Mac, which makes them convenient shortcuts for moving between its
@@ -100,18 +100,26 @@ synthesize an Fn transition when sending these chords. If MacWhisper uses
 Globe/Fn to activate dictation, that synthetic transition can unexpectedly
 start recording.
 
-For each Force Click trigger, use **Run AppleScript (Blocking)** instead:
+Create the ordinary corner click triggers inside BetterTouchTool's
+**Screen Sharing** app section—not under Global—and use **Run AppleScript
+(Blocking)**. A short delay lets the physical click finish before the keyboard
+shortcut is sent:
 
 ```applescript
+delay 0.15
 tell application "System Events" to key code 123 using control down
 ```
 
 Use key code `124` for Control-Right Arrow. This preserves the remote shortcut
 without passing through BetterTouchTool's keyboard-shortcut sender. The
 machine-specific recovery script in
-`scripts/configure-btt-remote-space-force-clicks.applescript` applies this to
-two existing triggers; its trigger UUIDs must be changed for another BTT
-installation.
+`scripts/configure-btt-remote-space-corner-clicks.applescript` recreates the two
+corner triggers; its trigger UUIDs must be changed for another BTT installation.
+It deliberately uses BTT's `add_new_trigger` path because changing
+`BTTActionsToExecute` with `update_trigger` can appear to work but lose the
+attached actions after BTT is relaunched.
+The script then cleanly relaunches BTT to flush and immediately verify the
+durable configuration path; expect BTT to disappear briefly while it runs.
 
 ## Use
 
